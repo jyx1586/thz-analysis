@@ -1,3 +1,8 @@
+# this code derives a two temperature model using 
+# electronic and phonoic heat capacity coefficients 
+# from L. V. Zhigilei for Gold at high electron
+# temperatures
+
 from scipy.integrate import solve_ivp
 import numpy as np
 from math import log, sqrt, pi, exp

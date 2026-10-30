@@ -1,3 +1,6 @@
+# Computes mean conductivities and standard deviation from .dat files 
+# generated from the raw .bal files.
+# Positions: Must be edited to correspond with the delays used in experiment
 
 import matplotlib.pyplot as plt
 import numpy.fft as fft
@@ -38,6 +41,7 @@ positions = ['neg0', 'neg1', 'neg2', 'pos1', 'pos2', 'pos5', 'pos7p5', 'pos10', 
 for pos in positions:
     realSigmas = [] # for calculating means across shots for each pos
 
+    # set range to maximum trials 
     for shot in range(7):
         if not os.path.exists(file_root + f'SS_Au800_{wp}_{pos}_shot_{shot:04d}/'):
             continue
@@ -67,7 +71,8 @@ for pos in positions:
         frq_sort = freq[index]
         ref_sort = ref_fft[index]
         sig_sort = sig_fft[index]
-        """
+
+        # generate figure for each shot (double check quality of data)
         plt.figure()
         plt.plot(frq_sort, np.abs(ref_sort), "-b", label="post-shot")
         plt.plot(frq_sort, np.abs(sig_sort), "-r", label="on-shot")
@@ -75,7 +80,6 @@ for pos in positions:
         plt.xlabel("Frequency (THz)")
         plt.ylabel(r"$\sigma_{THz}(\omega)\:(S/m)$")
         plt.xlim(0, 6)
-        """
 
         # finding the mean sigma in a freq range per shot
         sThickness = 30e-9
@@ -106,6 +110,7 @@ for pos in positions:
     realSigmaMean = np.mean(realSigmas) # realSigmas holds the mean sigma for each shot at a delay
     realSigmaStd = np.std(realSigmas)
     sigmaData[pos] = {"mean": realSigmaMean, "std": realSigmaStd}
+
 sortedSigmaData = renameKeys(sigmaData)
 print("sorted procesed conductivities")
 pprint(sortedSigmaData)
@@ -113,7 +118,7 @@ pprint(sortedSigmaData)
 plt.figure(figsize=(9,6))
 yErr = [v["std"] for v in sortedSigmaData.values()]
 plt.errorbar(list(sortedSigmaData.keys()), [v["mean"] for v in sortedSigmaData.values()], fmt="-ob", yerr=yErr, capsize=5, capthick=2, ms=7, label="Conductivity", lw=3)
-# plt.title(f"Conductivity vs Delay for Au: {wp}")
+plt.title(f"Conductivity vs Delay for Au: {wp}")
 plt.xlabel("Pump-probe delay (ps)", fontsize=18, weight='bold')
 plt.ylabel(r"$\mathbf{\sigma_{THz}(\omega)\:(S/m)}$", fontsize=18)
 plt.xlim(-3, 50)

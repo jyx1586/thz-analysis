@@ -60,6 +60,7 @@ def create_cutoffs(path, wp, pos, num):
 
     tFinal = np.concatenate([tKeep, tTotal])
 
+    # for debugging, set true to see the plots
     PLOT = True
     if PLOT: 
         plt.plot(tFinal, postFinal, label='post')
@@ -93,6 +94,7 @@ def cycle_through(position: str, p_range, wp='wp43'):
                 print(f"creating plot for file: {file_path}")
                 create_cutoffs(path, wp, pos, num)
 
+# for file naming convention with neg and pos positions
 # neg cycle
 cycle_through("neg", [i for i in range(3)])
 
